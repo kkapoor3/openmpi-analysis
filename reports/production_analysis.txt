@@ -1,0 +1,6 @@
+
+Total Number of Production Files = 1598
+Total Number of Files with Assert Statements = 114
+Total Number of Files with Debug Statements = 45
+Percentage of Files with Assert Statements = 7%
+Percentage of Files with Debug Statements = 2%
