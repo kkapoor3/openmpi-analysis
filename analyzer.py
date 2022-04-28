@@ -5,12 +5,10 @@ import json
 
 
 REPO_PATH = './ompi'
-PRODUCTION_PATH = './ompi/ompi'
 TEST_PATH = './ompi/test'
 
 def handle_repo():
     file_list = os.listdir('./')
-    print(file_list)
 
     if 'ompi' not in file_list:
         print("Repo not found. Cloning now ...")
@@ -89,7 +87,10 @@ class ProductionAnalyzer():
     def __init__(self):
         print("Starting Production Analyzer")
 
-        production_files = get_files(PRODUCTION_PATH)
+        all_files = get_files(REPO_PATH)
+        test_files = get_files(TEST_PATH)
+
+        production_files = list(set(all_files) - set(test_files))
         assert_statements, debug_statements = self.count_debug_assert(production_files)
         self.create_report(production_files, assert_statements, debug_statements)
         self.write_json(assert_statements, debug_statements)
@@ -221,7 +222,7 @@ class CommitAnalyzer():
 
 if __name__ == '__main__':
     handle_repo()
-    TestAnalyzer()
+    # TestAnalyzer()
     ProductionAnalyzer()
-    CommitAnalyzer()
+    # CommitAnalyzer()
     
