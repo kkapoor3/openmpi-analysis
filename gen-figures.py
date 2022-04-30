@@ -84,9 +84,10 @@ class ProductionAnalyzer():
 
 class CommitAnalyzer():
     def __init__(self):
-        self.project()
-        self.commits()
-        self.file_commits()
+        # self.project()
+        self.files_added()
+        # self.commits()
+        # self.file_commits()
 
     def project(self):
         commit_dates = []
@@ -97,7 +98,7 @@ class CommitAnalyzer():
         for file, dates in content.items():
             for date in dates:
                 commit_dates.append(datetime.strptime(date, '%d-%m-%y'))
-        
+
         commit_dates.sort()
 
         date_count = Counter(commit_dates)
@@ -109,6 +110,25 @@ class CommitAnalyzer():
         plt.xlabel("Year")
         plt.ylabel("Number of Commits")
         plt.savefig("./figures/project_commit_history.png", bbox_inches='tight')
+
+    def files_added(self):
+        added_dates = {}
+        with open('./json_data/commit_dates.json', 'r') as f:
+            content = json.load(f)
+            f.close()
+
+        for file, dates in content.items():
+            added_dates[file] = datetime.strptime(min(dates), '%d-%m-%y')
+
+        date_count = Counter(list(added_dates.values()))
+
+        plt.figure(figsize=(40, 10))
+        plt.rcParams['figure.dpi'] = 300
+        plt.bar(list(date_count.keys()), list(date_count.values()), width=12)
+        plt.title("History of adding test files")
+        plt.xlabel("Year")
+        plt.ylabel("Number of Files Added")
+        plt.savefig("./figures/file_added_history.png", bbox_inches='tight')
 
 
     def commits(self):
@@ -128,8 +148,8 @@ class CommitAnalyzer():
 
         plt.figure(figsize=(40, 10))
         plt.rcParams['figure.dpi'] = 500
-        plt.bar(list(sorted_commits.keys())[:20], list(sorted_commits.values())[:20])
-        plt.title("Top Authors")
+        plt.bar(list(sorted_commits.keys())[:7], list(sorted_commits.values())[:7])
+        plt.title("Top Testing Contributors")
         plt.xlabel("Author Name")
         plt.ylabel("Number of Files contibuted")
         plt.savefig("./figures/top_authors.png", bbox_inches='tight')
@@ -155,6 +175,7 @@ class CommitAnalyzer():
         plt.savefig("./figures/top_files.png", bbox_inches='tight')
 
 if __name__ == '__main__':
-    TestAnalyzer()
-    ProductionAnalyzer()
+    plt.rcParams.update({'font.size': 30})
+    # TestAnalyzer()
+    # ProductionAnalyzer()
     CommitAnalyzer()
