@@ -32,8 +32,8 @@ def get_coverage():
 
 
 if __name__ == "__main__":
-    # install_dependencies()
-    # get_project()
-    # configure()
-    # build_project()
+    install_dependencies()
+    get_project()
+    configure()
+    build_project()
     get_coverage()
