@@ -84,10 +84,11 @@ class ProductionAnalyzer():
 
 class CommitAnalyzer():
     def __init__(self):
-        # self.project()
-        # self.files_added()
+        self.project()
+        self.files_added()
         self.commits()
-        # self.file_commits()
+        self.file_commits()
+        self.file_added_dates()
 
     def project(self):
         commit_dates = []
@@ -157,6 +158,20 @@ class CommitAnalyzer():
         plt.ylabel("Number of Files contibuted")
         plt.savefig("./figures/top_authors.png", bbox_inches='tight')
 
+
+        headers = [["Tester Name", "Number of Commits"]]
+        table = []
+
+        for k, v in sorted_commits.items():
+            table.append([k, v])
+
+        table = headers + table
+
+        with open('./figures/testers.txt', "w") as f:
+            f.write(tabulate(table, headers="firstrow", tablefmt="fancy_grid"))
+            f.close()
+        
+
     def file_commits(self):
         with open('./json_data/total_commits.json', 'r') as f:
             content = json.load(f)
@@ -178,8 +193,28 @@ class CommitAnalyzer():
         plt.ylabel("Number of Commits")
         plt.savefig("./figures/top_files.png", bbox_inches='tight')
 
+    
+    def file_added_dates(self):
+        with open('./json_data/file_add_dates.json', 'r') as f:
+            content = json.load(f)
+            f.close()
+
+        headers = [["File Name", "Added Date"]]
+        table = []
+
+        for k, v in content.items():
+            table.append([k, v])
+
+        table = headers + table
+
+        with open('./figures/file_added_dates.txt', "w") as f:
+            f.write(tabulate(table, headers="firstrow", tablefmt="fancy_grid"))
+            f.close()
+
+
+
 if __name__ == '__main__':
     plt.rcParams.update({'font.size': 30})
-    # TestAnalyzer()
-    # ProductionAnalyzer()
+    TestAnalyzer()
+    ProductionAnalyzer()
     CommitAnalyzer()

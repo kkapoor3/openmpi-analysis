@@ -161,9 +161,9 @@ class CommitAnalyzer():
         print("This will take a while to complete...")
 
         test_files = get_files(TEST_PATH)
-        total_commits, commit_authors, commit_dates = self.get_commit_details(test_files)
+        total_commits, commit_authors, commit_dates, file_add_dates = self.get_commit_details(test_files)
         self.create_report(total_commits, commit_authors, commit_dates)
-        self.write_json(total_commits, commit_authors, commit_dates)
+        self.write_json(total_commits, commit_authors, commit_dates, file_add_dates)
 
         print("Commit Analyzer finished \n")
         
@@ -172,6 +172,7 @@ class CommitAnalyzer():
         total_commits = {}
         commit_authors = {}
         commit_dates = {}
+        file_add_dates = {}
         for file in files:
             print("Analyzing File ", file[7:])
             authors = []
@@ -188,25 +189,21 @@ class CommitAnalyzer():
             commit_authors[file] = list(set(authors))
             commit_dates[file] = dates
             total_commits[file] = commit_count
+            file_add_dates[file] = min(dates)
         
-        return total_commits, commit_authors, commit_dates
+        return total_commits, commit_authors, commit_dates, file_add_dates
 
     def create_report(self, total_commits, commit_authors, commit_dates):
         
-        headers = [["File Name", "Date Added", "Authors", "Total Commits"]]
-        table = []
         total_authors = []
         for file, commits in total_commits.items():
-            table.append([file, commit_dates[file][0], commit_authors[file], commits])
             total_authors.extend(commit_authors[file])
-
-        table = headers + table
 
         with open('./reports/commit_analysis.txt', "w") as f:
             f.write("\nTotal Number of Authors = " + str(len(set(total_authors))))
             f.close()
 
-    def write_json(self, total_commits, commit_authors, commit_dates):
+    def write_json(self, total_commits, commit_authors, commit_dates, file_add_dates):
         with open("./json_data/total_commits.json", "w") as f:
             json.dump(total_commits, f)
             f.close()
@@ -219,10 +216,14 @@ class CommitAnalyzer():
             json.dump(commit_dates, f)
             f.close()
 
+        with open("./json_data/file_add_dates.json", "w") as f:
+            json.dump(file_add_dates, f)
+            f.close()
+
 
 if __name__ == '__main__':
     handle_repo()
-    # TestAnalyzer()
+    TestAnalyzer()
     ProductionAnalyzer()
-    # CommitAnalyzer()
+    CommitAnalyzer()
     
