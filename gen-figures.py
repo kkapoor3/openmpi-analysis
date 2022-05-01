@@ -85,8 +85,8 @@ class ProductionAnalyzer():
 class CommitAnalyzer():
     def __init__(self):
         # self.project()
-        self.files_added()
-        # self.commits()
+        # self.files_added()
+        self.commits()
         # self.file_commits()
 
     def project(self):
@@ -103,6 +103,7 @@ class CommitAnalyzer():
 
         date_count = Counter(commit_dates)
 
+        plt.rcParams.update({'font.size': 30})
         plt.figure(figsize=(20, 10))
         plt.rcParams['figure.dpi'] = 300
         plt.plot(list(date_count.keys()), list(date_count.values()))
@@ -122,7 +123,8 @@ class CommitAnalyzer():
 
         date_count = Counter(list(added_dates.values()))
 
-        plt.figure(figsize=(40, 10))
+        plt.rcParams.update({'font.size': 60})
+        plt.figure(figsize=(40, 20))
         plt.rcParams['figure.dpi'] = 300
         plt.bar(list(date_count.keys()), list(date_count.values()), width=12)
         plt.title("History of adding test files")
@@ -146,7 +148,8 @@ class CommitAnalyzer():
 
         sorted_commits = dict(sorted(commit_count.items(), key = lambda x: x[1], reverse = True))
 
-        plt.figure(figsize=(40, 10))
+        plt.rcParams.update({'font.size': 50})
+        plt.figure(figsize=(50, 30))
         plt.rcParams['figure.dpi'] = 500
         plt.bar(list(sorted_commits.keys())[:7], list(sorted_commits.values())[:7])
         plt.title("Top Testing Contributors")
@@ -166,6 +169,7 @@ class CommitAnalyzer():
 
         top_commits = dict(sorted(top_commits.items(), key=lambda x: x[1], reverse=True))
 
+        plt.rcParams.update({'font.size': 30})
         plt.figure(figsize=(60, 10))
         plt.rcParams['figure.dpi'] = 600
         plt.bar(list(top_commits.keys())[:20], list(top_commits.values())[:20])
